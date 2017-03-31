@@ -8,6 +8,6 @@ namespace ClientApp
 {
     class MainWindowVM
     {
-        private List<Object>
+        //private List<Object>
     }
 }
