@@ -48,7 +48,9 @@ namespace DAL
             string sex = member.Sex.Equals(Gender.Male) ? "M" : "F";
             using (SqlConnection con = new SqlConnection(CS))
             {
-                string query = @"INSERT INTO dbo.Member
+                string query = "";
+                if (member.Id == 0)
+                    query = @"INSERT INTO dbo.Member
                                        (FirstName,
                                         LastName,
                                         DateOfBirth,
@@ -62,6 +64,16 @@ namespace DAL
                                         '" + sex + @"',
                                         " + member.MotherId + @",
                                         " + member.FatherId + @");";
+                else
+                    query = @"UPDATE dbo.Member
+                           SET FirstName = '" + member.FirstName + @"',
+                               LastName = '" + member.LastName + @"',
+                               DateOfBirth = " + member.DateOfBirth.ToShortDateString() + @",
+                               Sex = '" + sex + @"',
+                               MotherId = " + member.MotherId + @",
+                               FatherId =  " + member.FatherId + @"
+                         WHERE Id=" + member.Id + ";";
+
                 SqlCommand cmd = new SqlCommand(query, con);
                 con.Open();
                 int count = cmd.ExecuteNonQuery();

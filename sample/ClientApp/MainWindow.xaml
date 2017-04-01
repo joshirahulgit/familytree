@@ -14,7 +14,14 @@
     <Window.Resources>
         <converter:GenderToBrushConverter x:Key="GenderBrushConverter"/>
         <HierarchicalDataTemplate x:Key="OuterTreeItemTemplate" ItemsSource="{Binding Path=Parents}" >
-            <TextBlock Margin="2" Text="{Binding Path=FirstName}"  Foreground="{Binding Path=Sex, Converter={StaticResource GenderBrushConverter}}"/>
+            <TextBlock Margin="2"  Foreground="{Binding Path=Sex, Converter={StaticResource GenderBrushConverter}}">
+                <Run Text="{Binding Path=FirstName}" />
+                <Run Text=" " />
+                <Run Text="{Binding Path=LastName}" />                
+                <Run Text="(" />
+                <Run Text="{Binding Path=DateOfBirth}" />                
+                <Run Text=")" />
+            </TextBlock>
         </HierarchicalDataTemplate>
     </Window.Resources>
     <Grid>
