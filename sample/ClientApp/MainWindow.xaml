@@ -4,9 +4,87 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ClientApp"
+        xmlns:converter="clr-namespace:ClientApp.Converters"
+        xmlns:controls="clr-namespace:ClientApp.Controls"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="Genealogy Tree" Height="350" Width="525"  WindowState="Maximized" Icon="Icon.ico">
+    <Window.DataContext>
+        <local:MainWindowVM/>
+    </Window.DataContext>
+    <Window.Resources>
+        <converter:GenderToBrushConverter x:Key="GenderBrushConverter"/>
+        <HierarchicalDataTemplate x:Key="OuterTreeItemTemplate" ItemsSource="{Binding Path=Parents}" >
+            <TextBlock Margin="2" Text="{Binding Path=FirstName}"  Foreground="{Binding Path=Sex, Converter={StaticResource GenderBrushConverter}}"/>
+        </HierarchicalDataTemplate>
+    </Window.Resources>
     <Grid>
-        <TreeView ItemsSource=""></TreeView>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="300"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Row="0">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                <CheckBox Margin="2,1,0,1" x:Name="boolExpandAll" Content="Expand All" IsChecked="True" VerticalAlignment="Center"></CheckBox>
+                <Rectangle Width="1.5" Height="16" Fill="Black" Margin="8,1,8,1"></Rectangle>
+                <Button Margin="0,1,1,1" Content="Add New Member" VerticalAlignment="Center" />
+            </StackPanel>
+
+        </Grid>
+        <controls:MyTreeView Grid.Row="1" ItemsSource="{Binding Path=Members}" ItemTemplate="{StaticResource OuterTreeItemTemplate}" SelectedObject="{Binding Path=ToEditMember,Mode=OneWayToSource}">
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="{x:Type TreeViewItem}">
+                    <Setter Property="IsExpanded" Value="{Binding ElementName=boolExpandAll,Path=IsChecked}" />
+                </Style>
+            </TreeView.ItemContainerStyle>
+        </controls:MyTreeView>
+        <Grid Grid.Row="2">
+            <StackPanel Orientation="Horizontal">
+                <Rectangle Margin="2,1,1,1" Height="12" Width="12" Fill="Red"/>
+                <TextBlock Margin="3,1,0,1" Text="Female" VerticalAlignment="Center"/>
+                <Rectangle Width="1.5" Height="12" Fill="Black" Margin="8,1,8,1"></Rectangle>
+                <Rectangle Margin="0,1,1,1" Height="12" Width="12" Fill="Blue"/>
+                <TextBlock Margin="3,1,1,1" Text="Male" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="1" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Member ID" Margin="2"  Grid.Row="0"/>
+            <TextBlock Margin="2" Grid.Row="1" Text="{Binding Path=ToEditMember.Id,Mode=OneWay}"/>
+            <TextBlock Text="First Name" Margin="2"  Grid.Row="2"/>
+            <TextBox Margin="2" Grid.Row="3" Text="{Binding Path=ToEditMember.FirstName,Mode=TwoWay}"/>
+            <TextBlock Text="Last Name" Margin="2"  Grid.Row="4"/>
+            <TextBox Margin="2" Grid.Row="5" Text="{Binding Path=ToEditMember.LastName,Mode=TwoWay}"/>
+            <TextBlock Text="Age" Margin="2"  Grid.Row="6"/>
+            <DatePicker Margin="2" Grid.Row="7" SelectedDate="{Binding Path=ToEditMember.DateOfBirth,Mode=OneWay}"/>
+            <TextBlock Text="Sex" Margin="2" Grid.Row="8"/>
+            <ComboBox Margin="2" Grid.Row="9" ItemsSource="{Binding AllGenders,Mode=OneWay}" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{Binding Path=ToEditMember.Sex,Mode=TwoWay}"/>
+            <TextBlock Text="Mother's Member ID" Margin="2"  Grid.Row="10"/>
+            <TextBox Margin="2" Grid.Row="11" Text="{Binding Path=ToEditMember.MotherId,Mode=TwoWay}"/>
+            <TextBlock Text="Father's Member ID" Margin="2" Grid.Row="12"/>
+            <TextBox Margin="2" Grid.Row="13" Text="{Binding Path=ToEditMember.FatherId,Mode=TwoWay}"/>
+            <Button Margin="2" Content="Save" Grid.Row="14" HorizontalAlignment="Right" Command="{Binding SaveMemberCmd}"/>
+        </Grid>
     </Grid>
 </Window>
