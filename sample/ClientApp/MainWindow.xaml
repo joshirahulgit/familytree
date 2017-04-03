@@ -13,13 +13,16 @@
     </Window.DataContext>
     <Window.Resources>
         <converter:GenderToBrushConverter x:Key="GenderBrushConverter"/>
+        <converter:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <converter:BooleanToCollapseConveter x:Key="BooleanToCollapseConveter"/>
+        <converter:SelectedToVisibilityConverter x:Key="SelectedToVisibilityConverter"/>
         <HierarchicalDataTemplate x:Key="OuterTreeItemTemplate" ItemsSource="{Binding Path=Parents}" >
             <TextBlock Margin="2"  Foreground="{Binding Path=Sex, Converter={StaticResource GenderBrushConverter}}">
                 <Run Text="{Binding Path=FirstName}" />
                 <Run Text=" " />
                 <Run Text="{Binding Path=LastName}" />                
                 <Run Text="(" />
-                <Run Text="{Binding Path=DateOfBirth}" />                
+                <Run Text="{Binding Path=DateOfBirth, StringFormat=d}" />                
                 <Run Text=")" />
             </TextBlock>
         </HierarchicalDataTemplate>
@@ -27,29 +30,39 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <Grid Grid.Row="0">
+        <Grid Grid.Row="0" Grid.ColumnSpan="2">
+            <!--Top Left Command Buttons-->
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                 <CheckBox Margin="2,1,0,1" x:Name="boolExpandAll" Content="Expand All" IsChecked="True" VerticalAlignment="Center"></CheckBox>
-                <Rectangle Width="1.5" Height="16" Fill="Black" Margin="8,1,8,1"></Rectangle>
-                <Button Margin="0,1,1,1" Content="Add New Member" VerticalAlignment="Center" />
             </StackPanel>
-
+            <!--Top Right Command Buttons-->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Margin="0,1,1,1" Content="Edit Member" Command="{Binding EditMemberCmd}" VerticalAlignment="Center" />
+                <Rectangle Width="1.5" Height="16" Fill="Black" Margin="8,1,8,1"></Rectangle>
+                <Button Margin="0,1,1,1" Content="Add New Member" Command="{Binding AddNewMemberCmd}" VerticalAlignment="Center" />
+                <Rectangle Width="1.5" Height="16" Fill="Black" Margin="8,1,8,1"></Rectangle>
+                <Button Margin="0,1,1,1" Content="Cancel" Command="{Binding CancelEditCmd}" VerticalAlignment="Center" />
+            </StackPanel>
         </Grid>
-        <controls:MyTreeView Grid.Row="1" ItemsSource="{Binding Path=Members}" ItemTemplate="{StaticResource OuterTreeItemTemplate}" SelectedObject="{Binding Path=ToEditMember,Mode=OneWayToSource}">
+        <Rectangle Grid.Row="1" Grid.ColumnSpan="2" Height="1.5" Fill="Black" Margin="1"/>
+        <controls:MyTreeView BorderThickness="0" Grid.Row="2" ItemsSource="{Binding Path=Members}" ItemTemplate="{StaticResource OuterTreeItemTemplate}" SelectedObject="{Binding Path=ToEditMember,Mode=TwoWay}">
             <TreeView.ItemContainerStyle>
                 <Style TargetType="{x:Type TreeViewItem}">
                     <Setter Property="IsExpanded" Value="{Binding ElementName=boolExpandAll,Path=IsChecked}" />
                 </Style>
             </TreeView.ItemContainerStyle>
         </controls:MyTreeView>
-        <Grid Grid.Row="2">
+        <Rectangle Grid.Row="3" Grid.ColumnSpan="2" Height="1.5" Fill="Black" Margin="1"/>
+        <Grid Grid.Row="4">
             <StackPanel Orientation="Horizontal">
                 <Rectangle Margin="2,1,1,1" Height="12" Width="12" Fill="Red"/>
                 <TextBlock Margin="3,1,0,1" Text="Female" VerticalAlignment="Center"/>
@@ -58,40 +71,59 @@
                 <TextBlock Margin="3,1,1,1" Text="Male" VerticalAlignment="Center"/>
             </StackPanel>
         </Grid>
-        <Grid Grid.Row="1" Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <TextBlock Text="Member ID" Margin="2"  Grid.Row="0"/>
-            <TextBlock Margin="2" Grid.Row="1" Text="{Binding Path=ToEditMember.Id,Mode=OneWay}"/>
-            <TextBlock Text="First Name" Margin="2"  Grid.Row="2"/>
-            <TextBox Margin="2" Grid.Row="3" Text="{Binding Path=ToEditMember.FirstName,Mode=TwoWay}"/>
-            <TextBlock Text="Last Name" Margin="2"  Grid.Row="4"/>
-            <TextBox Margin="2" Grid.Row="5" Text="{Binding Path=ToEditMember.LastName,Mode=TwoWay}"/>
-            <TextBlock Text="Age" Margin="2"  Grid.Row="6"/>
-            <DatePicker Margin="2" Grid.Row="7" SelectedDate="{Binding Path=ToEditMember.DateOfBirth,Mode=OneWay}"/>
-            <TextBlock Text="Sex" Margin="2" Grid.Row="8"/>
-            <ComboBox Margin="2" Grid.Row="9" ItemsSource="{Binding AllGenders,Mode=OneWay}" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{Binding Path=ToEditMember.Sex,Mode=TwoWay}"/>
-            <TextBlock Text="Mother's Member ID" Margin="2"  Grid.Row="10"/>
-            <TextBox Margin="2" Grid.Row="11" Text="{Binding Path=ToEditMember.MotherId,Mode=TwoWay}"/>
-            <TextBlock Text="Father's Member ID" Margin="2" Grid.Row="12"/>
-            <TextBox Margin="2" Grid.Row="13" Text="{Binding Path=ToEditMember.FatherId,Mode=TwoWay}"/>
-            <Button Margin="2" Content="Save" Grid.Row="14" HorizontalAlignment="Right" Command="{Binding SaveMemberCmd}"/>
-        </Grid>
+        <!--New and Edit Member Block-->
+        <Border Grid.Row="2" Grid.Column="1" 
+              Width="400"
+                BorderThickness="1.5,0,0,0" BorderBrush="Black" 
+              Visibility="{Binding Path=ToEditMember,Mode=OneWay,Converter={StaticResource SelectedToVisibilityConverter}}">
+            <Grid >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="Member ID" Margin="2"  Grid.Row="1"/>
+                <TextBlock Margin="2" Grid.Row="2" Text="{Binding Path=ToEditMember.Id,Mode=OneWay}"/>
+                <TextBlock Text="First Name" Margin="2"  Grid.Row="3"/>
+                <TextBlock Visibility="{Binding Path=IsEditable,Mode=OneWay,Converter={StaticResource BooleanToCollapseConveter}}" Margin="2" Grid.Row="4" Text="{Binding Path=ToEditMember.FirstName,Mode=TwoWay}"/>
+                <TextBox Visibility="{Binding Path=IsEditable,Mode=OneWay,Converter={StaticResource BooleanToVisibilityConverter}}"  
+                         Margin="2" Grid.Row="4" 
+                         Text="{Binding Path=ToEditMember.FirstName,Mode=TwoWay}"/>
+                <TextBlock Text="Last Name" Margin="2"  Grid.Row="5"/>
+                <TextBlock Visibility="{Binding Path=IsEditable,Mode=OneWay,Converter={StaticResource BooleanToCollapseConveter}}" 
+                           Margin="2" Grid.Row="6" Text="{Binding Path=ToEditMember.LastName,Mode=OneWay}"/>
+                <TextBox Visibility="{Binding Path=IsEditable,Mode=OneWay,Converter={StaticResource BooleanToVisibilityConverter}}" 
+                         Margin="2" Grid.Row="6" Text="{Binding Path=ToEditMember.LastName,Mode=TwoWay}"/>
+                <TextBlock Text="Date Of Birth" Margin="2"  Grid.Row="7"/>
+                <TextBlock Visibility="{Binding Path=IsEditable,Mode=OneWay,Converter={StaticResource BooleanToCollapseConveter}}" 
+                       Margin="2" Grid.Row="8" Text="{Binding Path=ToEditMember.DateOfBirth,Mode=OneWay, StringFormat=d}"/>
+                <DatePicker Visibility="{Binding Path=IsEditable,Mode=OneWay,Converter={StaticResource BooleanToVisibilityConverter}}" 
+                            Margin="2" Grid.Row="8" SelectedDate="{Binding Path=ToEditMember.DateOfBirth,Mode=TwoWay}"/>
+                <TextBlock Text="Sex" Margin="2" Grid.Row="9"/>
+                <ComboBox Visibility="{Binding Path=IsEditable,Mode=OneWay,Converter={StaticResource BooleanToCollapseConveter}}" IsEnabled="False" Margin="2" Grid.Row="10" ItemsSource="{Binding AllGenders,Mode=OneWay}" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{Binding Path=ToEditMember.Sex,Mode=TwoWay}"/>
+                <ComboBox Visibility="{Binding Path=IsEditable,Mode=OneWay,Converter={StaticResource BooleanToVisibilityConverter}}" Margin="2" Grid.Row="10" ItemsSource="{Binding AllGenders,Mode=OneWay}" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{Binding Path=ToEditMember.Sex,Mode=TwoWay}"/>
+                <TextBlock Text="Mother's Member ID" Margin="2"  Grid.Row="11"/>
+                <TextBlock Visibility="{Binding Path=IsEditable,Mode=OneWay,Converter={StaticResource BooleanToCollapseConveter}}" Margin="2" Grid.Row="12" Text="{Binding Path=ToEditMember.MotherId,Mode=TwoWay}"/>
+                <TextBox Visibility="{Binding Path=IsEditable,Mode=OneWay,Converter={StaticResource BooleanToVisibilityConverter}}" Margin="2" Grid.Row="12" Text="{Binding Path=ToEditMember.MotherId,Mode=TwoWay}"/>
+                <TextBlock Text="Father's Member ID" Margin="2" Grid.Row="13"/>
+                <TextBlock Visibility="{Binding Path=IsEditable,Mode=OneWay,Converter={StaticResource BooleanToCollapseConveter}}" Margin="2" Grid.Row="14" Text="{Binding Path=ToEditMember.FatherId,Mode=TwoWay}"/>
+                <TextBox Visibility="{Binding Path=IsEditable,Mode=OneWay,Converter={StaticResource BooleanToVisibilityConverter}}" Margin="2" Grid.Row="14" Text="{Binding Path=ToEditMember.FatherId,Mode=TwoWay}"/>
+                <Button Margin="2" Content="Save" Grid.Row="15" HorizontalAlignment="Right" Command="{Binding SaveMemberCmd}"/>
+            </Grid>
+        </Border>
     </Grid>
 </Window>

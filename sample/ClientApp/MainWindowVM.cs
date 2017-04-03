@@ -16,6 +16,8 @@ namespace ClientApp
 
         private IList<Member> members;
 
+        private bool isEditable;
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public Member SelectedMember { get; set; }
@@ -30,8 +32,6 @@ namespace ClientApp
                 return items;
             }
         }
-
-        private ICommand _saveMemberCmd;
 
         public IList<Member> Members
         {
@@ -69,13 +69,51 @@ namespace ClientApp
             }
         }
 
+        public ICommand EditMemberCmd
+        {
+            get
+            {
+                return new EditMemberCommand(this);
+            }
+        }
+
+        public ICommand AddNewMemberCmd
+        {
+            get
+            {
+                return new AddNewMemberCommand(this);
+            }
+        }
+
+        public ICommand CancelEditCmd
+        {
+            get
+            {
+                return new CancelEditCommand(this);
+            }
+        }
+
+        public bool IsEditable
+        {
+            get
+            {
+                return isEditable;
+            }
+
+            set
+            {
+                isEditable = value;
+                RaisePropertyChanged("IsEditable");
+            }
+        }
+
         private Member toEditMember;
 
 
         public MainWindowVM()
         {
+            IsEditable = false;
             dbAgent = new MemberDBAgent();
-            ToEditMember = new Member(0);
             ReadAndSetTree();
         }
 
@@ -96,9 +134,10 @@ namespace ClientApp
         }
         public void SaveToEditMember()
         {
-            if (this.dbAgent.SaveMember(ToEditMember)) { 
+            if (this.dbAgent.SaveMember(ToEditMember))
+            {
                 ReadAndSetTree();
-                ToEditMember = new Member(0);
+                CancelEditCmd.Execute(this);
             }
         }
     }
@@ -121,6 +160,74 @@ namespace ClientApp
         public void Execute(object parameter)
         {
             this.mainVM.SaveToEditMember();
+        }
+    }
+
+    class EditMemberCommand : ICommand
+    {
+        private MainWindowVM mainVM;
+
+        public event EventHandler CanExecuteChanged;
+
+        public EditMemberCommand(MainWindowVM mainVM)
+        {
+            this.mainVM = mainVM;
+        }
+
+        public bool CanExecute(object parameter)
+        {
+            return true;
+        }
+
+        public void Execute(object parameter)
+        {
+            this.mainVM.IsEditable=true;
+        }
+    }
+
+    class AddNewMemberCommand : ICommand
+    {
+        private MainWindowVM mainVM;
+
+        public event EventHandler CanExecuteChanged;
+
+        public AddNewMemberCommand(MainWindowVM mainVM)
+        {
+            this.mainVM = mainVM;
+        }
+
+        public bool CanExecute(object parameter)
+        {
+            return true;
+        }
+
+        public void Execute(object parameter)
+        {
+            mainVM.IsEditable = true;
+            this.mainVM.ToEditMember = new Member(0);
+        }
+    }
+
+    class CancelEditCommand : ICommand
+    {
+        private MainWindowVM mainVM;
+
+        public event EventHandler CanExecuteChanged;
+
+        public CancelEditCommand(MainWindowVM mainVM)
+        {
+            this.mainVM = mainVM;
+        }
+
+        public bool CanExecute(object parameter)
+        {
+            return true;
+        }
+
+        public void Execute(object parameter)
+        {
+            mainVM.IsEditable = false;
+            this.mainVM.ToEditMember = null;
         }
     }
 }

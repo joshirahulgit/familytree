@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +12,12 @@ namespace DAL
 {
     public class MemberDBAgent
     {
-        public string CS = "Data Source=DESKTOP-UR1QQFE;Initial Catalog=Library;Integrated Security=True";
+        private static string CS;
+
+        static MemberDBAgent()
+        {
+            CS = System.Configuration.ConfigurationManager.ConnectionStrings["CS"].ConnectionString;
+        }
 
         public IDictionary<long, Member> GetMembers()
         {
@@ -45,7 +51,10 @@ namespace DAL
 
         public bool SaveMember(Member member)
         {
+            SqlInt32 mId = member.MotherId != null ? SqlInt32.Parse(member.MotherId.ToString()) : SqlInt32.Null;
+            SqlInt32 fId = member.FatherId != null ? SqlInt32.Parse(member.FatherId.ToString()) : SqlInt32.Null;
             string sex = member.Sex.Equals(Gender.Male) ? "M" : "F";
+            SqlDateTime dob = new SqlDateTime(member.DateOfBirth);
             using (SqlConnection con = new SqlConnection(CS))
             {
                 string query = "";
@@ -60,18 +69,18 @@ namespace DAL
                                  VALUES
                                        ('" + member.FirstName + @"',
                                         '" + member.LastName + @"',
-                                        " + member.DateOfBirth.ToShortDateString() + @",
+                                        '" + dob + @"',
                                         '" + sex + @"',
-                                        " + member.MotherId + @",
-                                        " + member.FatherId + @");";
+                                        " + mId + @",
+                                        " + fId + @");";
                 else
                     query = @"UPDATE dbo.Member
                            SET FirstName = '" + member.FirstName + @"',
                                LastName = '" + member.LastName + @"',
-                               DateOfBirth = " + member.DateOfBirth.ToShortDateString() + @",
+                               DateOfBirth = '" + dob + @"',
                                Sex = '" + sex + @"',
-                               MotherId = " + member.MotherId + @",
-                               FatherId =  " + member.FatherId + @"
+                               MotherId = " + mId + @",
+                               FatherId =  " + fId + @"
                          WHERE Id=" + member.Id + ";";
 
                 SqlCommand cmd = new SqlCommand(query, con);

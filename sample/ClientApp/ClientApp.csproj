@@ -63,7 +63,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Controls\MyTreeView.cs" />
+    <Compile Include="Converters\BooleanToCollapseConveter.cs" />
+    <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\GenderToBrushConverter.cs" />
+    <Compile Include="Converters\SelectedToVisibilityConverter.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
