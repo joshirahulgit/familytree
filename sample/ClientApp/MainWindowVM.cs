@@ -1,4 +1,4 @@
-﻿using DAL;
+﻿using BL;
 using DataModel;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ namespace ClientApp
 {
     class MainWindowVM : INotifyPropertyChanged
     {
-        private MemberDBAgent dbAgent;
+        private MemberBL memberBL;
 
         private IList<Member> members;
 
@@ -113,19 +113,13 @@ namespace ClientApp
         public MainWindowVM()
         {
             IsEditable = false;
-            dbAgent = new MemberDBAgent();
+            memberBL = new MemberBL();
             ReadAndSetTree();
         }
 
         private void ReadAndSetTree()
         {
-            IDictionary<long, Member> members = dbAgent.GetMembers();
-            foreach (KeyValuePair<long, Member> member in members)
-            {
-                member.Value.setParents(members);
-            }
-
-            this.Members = members.Select(t1 => t1.Value).Where(t2 => !t2.HasChild).ToList();
+            this.Members = memberBL.getAllMemberTree();
         }
 
         public void RaisePropertyChanged(string propName)
@@ -134,7 +128,7 @@ namespace ClientApp
         }
         public void SaveToEditMember()
         {
-            if (this.dbAgent.SaveMember(ToEditMember))
+            if (memberBL.SaveMember(ToEditMember))
             {
                 ReadAndSetTree();
                 CancelEditCmd.Execute(this);
