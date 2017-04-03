@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BL
 {
-    public class MemberBL
+    internal class MemberBL : IMemberBL
     {
 
         private IMemberDBAgent dbAgent;

@@ -40,6 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BLFactory.cs" />
+    <Compile Include="IMemberBL.cs" />
     <Compile Include="MemberBL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

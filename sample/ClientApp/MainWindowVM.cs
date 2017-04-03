@@ -12,7 +12,7 @@ namespace ClientApp
 {
     class MainWindowVM : INotifyPropertyChanged
     {
-        private MemberBL memberBL;
+        private IMemberBL memberBL;
 
         private IList<Member> members;
 
@@ -113,7 +113,7 @@ namespace ClientApp
         public MainWindowVM()
         {
             IsEditable = false;
-            memberBL = new MemberBL();
+            memberBL = BLFactory.GetNewMemberBL();
             ReadAndSetTree();
         }
 
