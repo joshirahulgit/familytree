@@ -11,11 +11,11 @@ namespace BL
     public class MemberBL
     {
 
-        private MemberDBAgent dbAgent;
+        private IMemberDBAgent dbAgent;
 
         public MemberBL()
         {
-            dbAgent = new MemberDBAgent();
+            dbAgent = DBAgentFactory.GetNewMemberDBAgent();
         }
 
         public IList<Member> getAllMemberTree()

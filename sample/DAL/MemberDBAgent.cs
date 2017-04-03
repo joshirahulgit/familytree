@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DAL
 {
-    public class MemberDBAgent
+    internal class MemberDBAgent : IMemberDBAgent
     {
         private static string CS;
 
