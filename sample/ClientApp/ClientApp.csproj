@@ -60,11 +60,23 @@
     <Compile Include="Converters\BoolToImageSource.cs" />
     <Compile Include="Converters\GenderToImageSourceConverter.cs" />
     <Compile Include="Helper\ViewModelAgent.cs" />
-    <Compile Include="MemberTreeWindow.xaml.cs">
-      <DependentUpon>MemberTreeWindow.xaml</DependentUpon>
+    <Compile Include="LandingWindow.xaml.cs">
+      <DependentUpon>LandingWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MemberMapWindow.xaml.cs">
+      <DependentUpon>MemberMapWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MembersTreeWindow.xaml.cs">
+      <DependentUpon>MembersTreeWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="SaveMemberWindow.xaml.cs">
       <DependentUpon>SaveMemberWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ParentUC.xaml.cs">
+      <DependentUpon>ParentUC.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ChildrenUC.xaml.cs">
+      <DependentUpon>ChildrenUC.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\MemberTreeMap.xaml.cs">
       <DependentUpon>MemberTreeMap.xaml</DependentUpon>
@@ -76,7 +88,17 @@
       <DependentUpon>SaveMemberView.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\SaveMemberViewModel.cs" />
+    <Compile Include="UserControls\SelectorUC.xaml.cs">
+      <DependentUpon>SelectorUC.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\TreeMainNode.xaml.cs">
+      <DependentUpon>TreeMainNode.xaml</DependentUpon>
+    </Compile>
     <Page Include="Contents\Dracula.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LandingWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -97,11 +119,23 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="MemberTreeWindow.xaml">
+    <Page Include="MemberMapWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MembersTreeWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SaveMemberWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\ParentUC.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserControls\ChildrenUC.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -114,6 +148,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\SaveMemberView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\SelectorUC.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\TreeMainNode.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -171,6 +213,9 @@
     <Resource Include="Contents\Images\edit.png" />
     <Resource Include="Contents\Images\remove.png" />
     <Resource Include="Contents\Images\search.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Contents\Images\focus.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

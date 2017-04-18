@@ -23,23 +23,6 @@ namespace ClientApp.UserControls
     /// </summary>
     public partial class MemberTreeMap : UserControl
     {
-        public int MemberId
-        {
-            get { return (int)GetValue(MemberIdProperty); }
-            set { SetValue(MemberIdProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for MemberId.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty MemberIdProperty =
-            DependencyProperty.Register("MemberId", typeof(int), typeof(MemberTreeMap), new PropertyMetadata(0, MemberIdProperty_Changed));
-
-        private static void MemberIdProperty_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d!=null && d is MemberTreeMap && (int)e.NewValue != 0) {
-                (d as MemberTreeMap).loadMember();
-            }
-        }
-
         //private long memId = 8;//13;
         private float height = 70;
         private float width = 400;
@@ -48,6 +31,7 @@ namespace ClientApp.UserControls
         private IDictionary<long, MemberView> memberViewTracker;
         private double vCenter;
         private double hCenter;
+        private IDictionary<Line, Storyboard> lines;
 
 
         private IMemberBL bl;
@@ -55,17 +39,27 @@ namespace ClientApp.UserControls
         public MemberTreeMap()
         {
             InitializeComponent();
-            bl = BLFactory.GetNewMemberBL();
-            levelCounter = new Dictionary<int, int>();
-            memberViewTracker = new Dictionary<long, MemberView>();
-            //loadMember();
         }
 
-        public void loadMember()
+        private void initialize()
         {
-            Member member = bl.GetMemberWithParentAndChild(MemberId);
+            bl = BLFactory.GetNewMemberBL();
+            canvas.Children.Clear();
+            levelCounter = new Dictionary<int, int>();
+            memberViewTracker = new Dictionary<long, MemberView>();
+            lines = new Dictionary<Line, Storyboard>();
+        }
+
+        public void loadMember(long memberId, Window dialog)
+        {
+            initialize();
+            Member member = bl.GetMemberWithParentAndChild(memberId);
             if (member == null)
+            {
+                MessageBox.Show("No member found with id: " + memberId, "No Member", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 return;
+            }
+
 
             MemberView mv = new MemberView();
             mv.CommandVisibility = Visibility.Visible;
@@ -74,7 +68,7 @@ namespace ClientApp.UserControls
                 levelCounter.Add(0, levelCounter[0] + 1);
             else
                 levelCounter.Add(0, 1);
-            memberViewTracker.Add(MemberId, mv);
+            memberViewTracker.Add(memberId, mv);
 
             this.canvas.Children.Add(mv);
 
@@ -110,7 +104,43 @@ namespace ClientApp.UserControls
             p1 = new Point(x, y);
             joinChildren(p1, member.Children);
 
-            mv.FocusBorder.Visibility = Visibility.Visible;
+            //mv.FocusBorder.Visibility = Visibility.Visible;
+
+            //Add selector visual
+            SelectorUC selector = new SelectorUC();
+            selector.SetValue(Canvas.LeftProperty, left - selector.Width);
+            selector.SetValue(Canvas.TopProperty, top + (height - selector.Height) / 2);
+            canvas.Children.Add(selector);
+
+            //Animate lines
+            if (lines != null)
+            {
+                foreach (var lineItem in lines)
+                {
+                    lineItem.Key.BeginStoryboard(lineItem.Value);
+                }
+            }
+
+            //Add children indicator
+            if (member.Children != null && member.Children.Count > 0)
+            {
+                ChildrenUC cUC = new ChildrenUC();
+                cUC.SetValue(Canvas.TopProperty, top + height);
+                cUC.SetValue(Canvas.LeftProperty, left + width - cUC.Width + 4);
+                canvas.Children.Add(cUC);
+            }
+
+            //Add Parent indicator
+            if (member.Parents != null && member.Parents.Count > 0)
+            {
+                ParentUC pUC = new ParentUC();
+                pUC.SetValue(Canvas.TopProperty, top - pUC.Height);
+                pUC.SetValue(Canvas.LeftProperty, left + width - pUC.Width + 4);
+                canvas.Children.Add(pUC);
+            }
+
+            if (!dialog.IsActive)
+                dialog.ShowDialog();
         }
 
         private void joinChildren(Point p1, IList<Member> children)
@@ -125,12 +155,22 @@ namespace ClientApp.UserControls
                     Point p = new Point(x, y);
                     Line line = new Line();
                     line.Stroke = new SolidColorBrush(Colors.White);
-                    line.StrokeThickness = 2;
+                    line.StrokeThickness = 1;
                     line.X1 = p1.X;
                     line.Y1 = p1.Y;
-                    line.X2 = p.X;
-                    line.Y2 = p.Y;
+                    line.X2 = p1.X;
+                    line.Y2 = p1.Y;
                     this.canvas.Children.Add(line);
+
+                    //Animating line drawing.
+                    Storyboard sb = new Storyboard();
+                    DoubleAnimation da = new DoubleAnimation(line.Y2, p.Y, new Duration(new TimeSpan(0, 0, 3)));
+                    DoubleAnimation da1 = new DoubleAnimation(line.X2, p.X, new Duration(new TimeSpan(0, 0, 3)));
+                    Storyboard.SetTargetProperty(da, new PropertyPath("(Line.Y2)"));
+                    Storyboard.SetTargetProperty(da1, new PropertyPath("(Line.X2)"));
+                    sb.Children.Add(da);
+                    sb.Children.Add(da1);
+                    lines.Add(line, sb);
                 }
             }
         }
@@ -147,7 +187,7 @@ namespace ClientApp.UserControls
                     Point p = new Point(x, y);
                     Line line = new Line();
                     line.Stroke = new SolidColorBrush(Colors.White);
-                    line.StrokeThickness = 2;
+                    line.StrokeThickness = 1;
                     line.X1 = p1.X;
                     line.Y1 = p1.Y;
                     line.X2 = p1.X;
@@ -162,10 +202,7 @@ namespace ClientApp.UserControls
                     Storyboard.SetTargetProperty(da1, new PropertyPath("(Line.X2)"));
                     sb.Children.Add(da);
                     sb.Children.Add(da1);
-
-                    line.BeginStoryboard(sb);
-                    //line.X2 = p.X;
-                    //line.Y2 = p.Y;
+                    lines.Add(line, sb);
                 }
             }
         }
@@ -214,6 +251,7 @@ namespace ClientApp.UserControls
             {
                 MemberView mv = new MemberView();
                 mv.DataContext = parent;
+                mv.SetValue(MemberView.CommandVisibilityProperty, Visibility.Collapsed);
                 if (levelCounter.ContainsKey(-1))
                     levelCounter[-1] = levelCounter[-1] + 1;
                 else
@@ -226,10 +264,25 @@ namespace ClientApp.UserControls
 
         private void loadChildren(Member member)
         {
+            ////Create children marker
+            //if (member.Children != null && member.Children.Count > 0)
+            //{
+            //    Rectangle rect = new Rectangle();
+            //    rect.Width = (member.Children.Count * width) + (member.Children.Count * margin);
+            //    rect.Height = height + (margin);
+            //    rect.Stroke = new SolidColorBrush(Colors.White);
+            //    rect.StrokeThickness = 1;
+            //    double top
+            //    rect.SetValue(Canvas.TopProperty, margin / 2);
+            //    rect.SetValue(Canvas.LeftProperty, margin / 2);
+            //    canvas.Children.Add(rect);
+            //}
+
             foreach (Member child in member.Children)
             {
                 MemberView mv = new MemberView();
                 mv.DataContext = child;
+                mv.SetValue(MemberView.CommandVisibilityProperty, Visibility.Collapsed);
                 if (levelCounter.ContainsKey(1))
                     levelCounter[1] = levelCounter[1] + 1;
                 else
@@ -240,5 +293,15 @@ namespace ClientApp.UserControls
             }
         }
 
+        private void setScroll()
+        {
+            scroll.ScrollToVerticalOffset(scroll.ScrollableHeight / 2);
+            scroll.ScrollToHorizontalOffset(scroll.ScrollableWidth / 2);
+        }
+
+        private void scroll_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            setScroll();
+        }
     }
 }

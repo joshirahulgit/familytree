@@ -1,13 +1,10 @@
-﻿<Window x:Class="ClientApp.SaveMemberWindow"
+﻿<UserControl x:Class="ClientApp.UserControls.TreeMainNode"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ClientApp"
-        xmlns:uc="clr-namespace:ClientApp.UserControls"
-        mc:Ignorable="d"
-        Title="Save Member" MinHeight="300" MinWidth="300">
+        xmlns:local="clr-namespace:ClientApp.UserControls">
     <Grid>
-        <uc:SaveMemberView x:Name="SaveMemberView"/>
+        <TextBlock x:Name="txlCaption"></TextBlock>
     </Grid>
-</Window>
+</UserControl>

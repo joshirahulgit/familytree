@@ -1,4 +1,4 @@
-﻿<Window x:Class="ClientApp.SaveMemberWindow"
+﻿<Window x:Class="ClientApp.MemberMapWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:ClientApp"
         xmlns:uc="clr-namespace:ClientApp.UserControls"
         mc:Ignorable="d"
-        Title="Save Member" MinHeight="300" MinWidth="300">
+        Title="Member Map" Height="300" Width="300" Closed="Window_Closed">
     <Grid>
-        <uc:SaveMemberView x:Name="SaveMemberView"/>
+        <uc:MemberTreeMap x:Name="TMMember"/>
     </Grid>
 </Window>

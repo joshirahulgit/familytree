@@ -13,5 +13,6 @@ namespace BL
         void GetMember(long memberId,Action<Member> action);
 
         void DeleteMember(long memberId, Action<bool> result);
+        IList<Member> GetChildMostMembers();
     }
 }

@@ -1,0 +1,12 @@
+﻿<UserControl x:Class="ClientApp.UserControls.SelectorUC"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ClientApp.UserControls"
+             mc:Ignorable="d" Height="38" Width="240">
+    <Canvas>
+        <TextBlock Text="Selected Member" FontSize="26" Canvas.Top="0" Canvas.Left="0"/>
+        <Path Fill="White" Data="M 0 40 L 20 20 L 0 0 Z" Canvas.Left="215" Canvas.Top="8" Height="20" Stretch="Fill"/>
+    </Canvas>
+</UserControl>

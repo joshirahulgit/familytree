@@ -117,23 +117,30 @@ namespace DAL
                 SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    long id = long.Parse(reader["MemberID"].ToString());
-                    Member member = new Member(id);
-                    member.FirstName = (String)reader["FirstName"];
-                    member.LastName = reader["LastName"] == DBNull.Value ? String.Empty : (String)reader["LastName"];
-                    member.DateOfBirth = (DateTime)reader["DateOfBirth"];
-                    member.Sex = reader["Sex"].ToString().Equals("M") ? Gender.Male : Gender.Female;
-                    if (reader["MMemberID"] != DBNull.Value)
-                        member.MotherId = long.Parse(reader["MMemberID"].ToString());
-                    if (reader["FMemberID"] != DBNull.Value)
-                        member.FatherId = long.Parse(reader["FMemberID"].ToString());
+                    Member member = readerToMember(reader);
+
                     members.Add(member.Id, member);
-                    member.HasChildInDB = Boolean.Parse(reader["hasChild"].ToString());
-                    member.HasParentInDB = Boolean.Parse(reader["hasParent"].ToString());
                 }
                 con.Close();
             }
             return members;
+        }
+
+        private static Member readerToMember(SqlDataReader reader)
+        {
+            long id = reader.GetInt32(reader.GetOrdinal("MemberID"));
+            Member member = new Member(id);
+            member.FirstName = (String)reader["FirstName"];
+            member.LastName = reader["LastName"] == DBNull.Value ? String.Empty : (String)reader["LastName"];
+            member.DateOfBirth = (DateTime)reader["DateOfBirth"];
+            member.Sex = reader["Sex"].ToString().Equals("M") ? Gender.Male : Gender.Female;
+            if (reader["MMemberID"] != DBNull.Value)
+                member.MotherId = long.Parse(reader["MMemberID"].ToString());
+            if (reader["FMemberID"] != DBNull.Value)
+                member.FatherId = long.Parse(reader["FMemberID"].ToString());
+            member.HasChildInDB = Boolean.Parse(reader["hasChild"].ToString());
+            member.HasParentInDB = Boolean.Parse(reader["hasParent"].ToString());
+            return member;
         }
 
         public void GetMember(long memberId, Action<Member> action)
@@ -149,19 +156,7 @@ namespace DAL
                 Member member = null;
                 if (reader.Read())
                 {
-                    //TODO: unify this in a method call.
-                    long id = reader.GetInt32(reader.GetOrdinal("MemberID"));
-                    member = new Member(id);
-                    member.FirstName = reader.GetString(reader.GetOrdinal("FirstName"));
-                    member.LastName = reader["LastName"] == DBNull.Value ? String.Empty : (String)reader["LastName"];
-                    member.DateOfBirth = (DateTime)reader["DateOfBirth"];
-                    member.Sex = reader["Sex"].ToString().Equals("M") ? Gender.Male : Gender.Female;
-                    if (reader["MMemberID"] != DBNull.Value)
-                        member.MotherId = long.Parse(reader["MMemberID"].ToString());
-                    if (reader["FMemberID"] != DBNull.Value)
-                        member.FatherId = long.Parse(reader["FMemberID"].ToString());
-                    member.HasChildInDB = Boolean.Parse(reader["hasChild"].ToString());
-                    member.HasParentInDB = Boolean.Parse(reader["hasParent"].ToString());
+                    member = readerToMember(reader);
                 };
                 connection.Close();
                 if (action != null)
@@ -187,6 +182,25 @@ namespace DAL
                 if (result != null)
                     result((bool)IsSuccess.Value);
             }
+        }
+
+        public IList<Member> GetChildMostMembers()
+        {
+            IList<Member> members = new List<Member>();
+            using (SqlConnection con = new SqlConnection(CS))
+            {
+                string query = @"SELECT * FROM [dbo].[getChildMostMembers] ()";
+                SqlCommand cmd = new SqlCommand(query, con);
+                con.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    Member member = readerToMember(reader);
+                    members.Add(member);
+                }
+                con.Close();
+            }
+            return members;
         }
     }
 }

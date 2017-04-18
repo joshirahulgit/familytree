@@ -57,5 +57,10 @@ namespace BL
         {
             dbAgent.DeleteMember(memberId, result);
         }
+
+        public IList<Member> GetChildMostMembers()
+        {
+            return dbAgent.GetChildMostMembers();
+        }
     }
 }

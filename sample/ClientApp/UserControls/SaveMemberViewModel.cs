@@ -142,6 +142,37 @@ namespace ClientApp.UserControls
 
         public void SaveSelectedMember()
         {
+            //Validate all fields
+            StringBuilder errorSB = new StringBuilder();
+            if (String.IsNullOrEmpty(SelectedMember.FirstName))
+                errorSB.Append("'First Name' is required.");
+
+            if (SelectedMember.DateOfBirth == null)
+            {
+                if (errorSB.Length > 0)
+                    errorSB.AppendLine();
+                errorSB.Append("'Date of birth' is required.");
+            }
+
+            if (IsFatherIdGood!=null && !IsFatherIdGood.Value) {
+                if (errorSB.Length > 0)
+                    errorSB.AppendLine();
+                errorSB.Append("'Father id' can be '0' or an exiting male member id.");
+            }
+
+            if (IsMotherIdGood != null && !IsMotherIdGood.Value)
+            {
+                if (errorSB.Length > 0)
+                    errorSB.AppendLine();
+                errorSB.Append("'Mother id' can be '0' or an exiting female member id.");
+            }
+
+            if (errorSB.Length > 0)
+            {
+                MessageBox.Show(errorSB.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             //Show success message and ask to view member.
             memberBL.SaveMember(SelectedMember, (res, memberId) =>
             {

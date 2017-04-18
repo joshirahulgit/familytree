@@ -10,22 +10,21 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace ClientApp
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for LandingWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class LandingWindow : Window
     {
-        public MainWindow()
+        public LandingWindow()
         {
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void btnSearch_Click(object sender, RoutedEventArgs e)
         {
             long memId = 0L;
             if (txtSearchMember == null || string.IsNullOrEmpty(txtSearchMember.Text) || !long.TryParse(txtSearchMember.Text, out memId))
@@ -34,7 +33,7 @@ namespace ClientApp
             MemberMapWindow.SetMemberId(memId);
         }
 
-        private void AddNewMember_Click(object sender, RoutedEventArgs e)
+        private void btnAddMember_Click(object sender, RoutedEventArgs e)
         {
             SaveMemberWindow cw = new SaveMemberWindow();
             cw.Height = 480;
@@ -46,6 +45,12 @@ namespace ClientApp
             cw.ShowInTaskbar = false;
             cw.Owner = Application.Current.MainWindow;
             cw.ShowDialog();
+        }
+
+        private void txtSearchMember_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            if (!char.IsDigit(e.Text, e.Text.Length - 1))
+                e.Handled = true;
         }
     }
 }

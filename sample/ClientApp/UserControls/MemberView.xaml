@@ -11,7 +11,7 @@
         <converter:GenderToBrushConverter x:Key="GenderToBrushConverter"/>
         <converter:GenderToImageSourceConverter x:Key="GenderToImageSourceConverter"/>
         <sys:String x:Key="border">border</sys:String>
-        <Image x:Key="SearchImg" Source="/ClientApp;Component/Contents/Images/search.png"></Image>
+        <Image x:Key="FocusImg" Source="/ClientApp;Component/Contents/Images/focus.png"></Image>
         <Image x:Key="EditImg" Source="/ClientApp;Component/Contents/Images/edit.png"></Image>
         <Image x:Key="DeleteImg" Source="/ClientApp;Component/Contents/Images/remove.png"></Image>
     </UserControl.Resources>
@@ -52,31 +52,37 @@
                     <Run Text="{Binding Id,Mode=OneWay, StringFormat='{}{0:0000000000}'}"/>
                 </TextBlock>
                 <StackPanel Orientation="Horizontal" 
-                            x:Name="spCommand"
                             Grid.Row="0" 
                             Grid.Column="0" 
                             Grid.ColumnSpan="2" 
                             VerticalAlignment="Center" 
                             HorizontalAlignment="Right">
-                    <Button ToolTip="Search"
+                    <Button ToolTip="Focus"
+                            x:Name="btnFocus"
                             Style="{x:Null}"
                             Margin="2,0,0,0"
                             Background="Transparent"
                             BorderThickness="0"
-                            Content="{StaticResource SearchImg}"/>
+                            Visibility="Collapsed"
+                            Content="{StaticResource FocusImg}"
+                            Click="btnFocus_Click"/>
                     <Button ToolTip="Edit" 
+                            x:Name="btnEdit"
                             Style="{x:Null}"
                             Margin="2,0,0,0"
                             Background="Transparent"
                             BorderThickness="0"
+                            Visibility="Collapsed"
                             Content="{StaticResource EditImg}"
                             Click="btnEdit_Click"
                             />
-                    <Button ToolTip="Delete" 
+                    <Button ToolTip="Delete"
+                            x:Name="btnDelete"
                             Style="{x:Null}"
                             Margin="2,0,0,0"
                             Background="Transparent"
                             BorderThickness="0"
+                            Visibility="Collapsed"
                             Content="{StaticResource DeleteImg}"
                             Click="btnDelete_Click"/>
                 </StackPanel>

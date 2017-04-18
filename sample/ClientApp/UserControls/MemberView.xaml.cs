@@ -42,7 +42,8 @@ namespace ClientApp.UserControls
                 return;
 
             MemberView mv = d as MemberView;
-            mv.spCommand.Visibility = (Visibility)Enum.Parse(typeof(Visibility), e.NewValue.ToString(), true);
+            bool isEditable = ((Visibility)Enum.Parse(typeof(Visibility), e.NewValue.ToString(), true)).Equals(Visibility.Visible);
+            mv.SetCommandButtons(isEditable);
         }
 
         public MemberView()
@@ -67,6 +68,7 @@ namespace ClientApp.UserControls
             cw.ShowInTaskbar = false;
             cw.Owner = Application.Current.MainWindow;
             cw.ShowDialog();
+            MemberMapWindow.SetMemberId(member.Id);
         }
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
@@ -91,7 +93,7 @@ namespace ClientApp.UserControls
                         if (status)
                         {
                             MessageBox.Show("Member deleted successfully");
-                            MemberTreeWindow.CloseWindow();
+                            MemberMapWindow.CloseWindow();
                         }
                         else
                             MessageBox.Show("Error! Member is not deleted. Please try again.");
@@ -102,6 +104,30 @@ namespace ClientApp.UserControls
                 default:
                     break;
             }
+        }
+
+        private void SetCommandButtons(bool isEditable)
+        {
+            if (isEditable) {
+                btnDelete.Visibility = Visibility.Visible;
+                btnEdit.Visibility = Visibility.Visible;
+                btnFocus.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                btnDelete.Visibility = Visibility.Collapsed;
+                btnEdit.Visibility = Visibility.Collapsed;
+                btnFocus.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void btnFocus_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.DataContext == null || !(DataContext is Member))
+                return;
+
+            Member member = DataContext as Member;
+            MemberMapWindow.SetMemberId(member.Id);
         }
     }
 }
