@@ -34,8 +34,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationFramework.Aero2" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -54,6 +57,29 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\BoolToImageSource.cs" />
+    <Compile Include="Converters\GenderToImageSourceConverter.cs" />
+    <Compile Include="Helper\ViewModelAgent.cs" />
+    <Compile Include="MemberTreeWindow.xaml.cs">
+      <DependentUpon>MemberTreeWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SaveMemberWindow.xaml.cs">
+      <DependentUpon>SaveMemberWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\MemberTreeMap.xaml.cs">
+      <DependentUpon>MemberTreeMap.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\MemberView.xaml.cs">
+      <DependentUpon>MemberView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\SaveMemberView.xaml.cs">
+      <DependentUpon>SaveMemberView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\SaveMemberViewModel.cs" />
+    <Page Include="Contents\Dracula.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -71,6 +97,26 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="MemberTreeWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SaveMemberWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\MemberTreeMap.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\MemberView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\SaveMemberView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainWindowVM.cs" />
@@ -112,6 +158,19 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Contents\Images\cross.png" />
+    <Resource Include="Contents\Images\tick.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Contents\Images\Female-icon.png" />
+    <Resource Include="Contents\Images\Male-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Contents\Images\edit.png" />
+    <Resource Include="Contents\Images\remove.png" />
+    <Resource Include="Contents\Images\search.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

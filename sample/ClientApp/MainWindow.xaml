@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:ClientApp"
         xmlns:converter="clr-namespace:ClientApp.Converters"
         xmlns:controls="clr-namespace:ClientApp.Controls"
+        xmlns:uc="clr-namespace:ClientApp.UserControls"
         mc:Ignorable="d"
         Title="Genealogy Tree" Height="350" Width="525"  WindowState="Maximized" Icon="Icon.ico">
     <Window.DataContext>
@@ -17,17 +18,18 @@
         <converter:BooleanToCollapseConveter x:Key="BooleanToCollapseConveter"/>
         <converter:SelectedToVisibilityConverter x:Key="SelectedToVisibilityConverter"/>
         <HierarchicalDataTemplate x:Key="OuterTreeItemTemplate" ItemsSource="{Binding Path=Parents}" >
-            <TextBlock Margin="2"  Foreground="{Binding Path=Sex, Converter={StaticResource GenderBrushConverter}}">
+            <uc:MemberView  Margin="2" HorizontalAlignment="Stretch"/>
+            <!--<TextBlock Margin="2"  Foreground="{Binding Path=Sex, Converter={StaticResource GenderBrushConverter}}">
                 <Run Text="{Binding Path=FirstName}" />
                 <Run Text=" " />
                 <Run Text="{Binding Path=LastName}" />                
                 <Run Text="(" />
                 <Run Text="{Binding Path=DateOfBirth, StringFormat=d}" />                
                 <Run Text=")" />
-            </TextBlock>
+            </TextBlock>-->
         </HierarchicalDataTemplate>
     </Window.Resources>
-    <Grid>
+    <Grid Background="{StaticResource BG}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -46,15 +48,18 @@
             </StackPanel>
             <!--Top Right Command Buttons-->
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <TextBox Margin="0,1,1,1" Text="" x:Name="txtSearchMember" Width="50" VerticalAlignment="Center" />
+                <Button Margin="0,1,1,1" Content="Search Member" Click="Button_Click" VerticalAlignment="Center" />
+                <Rectangle Width="1.5" Height="16" Fill="Black" Margin="8,1,8,1"></Rectangle>
                 <Button Margin="0,1,1,1" Content="Edit Member" Command="{Binding EditMemberCmd}" VerticalAlignment="Center" />
                 <Rectangle Width="1.5" Height="16" Fill="Black" Margin="8,1,8,1"></Rectangle>
-                <Button Margin="0,1,1,1" Content="Add New Member" Command="{Binding AddNewMemberCmd}" VerticalAlignment="Center" />
+                <Button Margin="0,1,1,1" Content="Add New Member" Click="AddNewMember_Click" VerticalAlignment="Center" />
                 <Rectangle Width="1.5" Height="16" Fill="Black" Margin="8,1,8,1"></Rectangle>
                 <Button Margin="0,1,1,1" Content="Cancel" Command="{Binding CancelEditCmd}" VerticalAlignment="Center" />
             </StackPanel>
         </Grid>
         <Rectangle Grid.Row="1" Grid.ColumnSpan="2" Height="1.5" Fill="Black" Margin="1"/>
-        <controls:MyTreeView BorderThickness="0" Grid.Row="2" ItemsSource="{Binding Path=Members}" ItemTemplate="{StaticResource OuterTreeItemTemplate}" SelectedObject="{Binding Path=ToEditMember,Mode=TwoWay}">
+        <controls:MyTreeView Background="Transparent" BorderThickness="0" Grid.Row="2" ItemsSource="{Binding Path=Members}" ItemTemplate="{StaticResource OuterTreeItemTemplate}" SelectedObject="{Binding Path=ToEditMember,Mode=TwoWay}">
             <TreeView.ItemContainerStyle>
                 <Style TargetType="{x:Type TreeViewItem}">
                     <Setter Property="IsExpanded" Value="{Binding ElementName=boolExpandAll,Path=IsChecked}" />
@@ -66,7 +71,7 @@
             <StackPanel Orientation="Horizontal">
                 <Rectangle Margin="2,1,1,1" Height="12" Width="12" Fill="Red"/>
                 <TextBlock Margin="3,1,0,1" Text="Female" VerticalAlignment="Center"/>
-                <Rectangle Width="1.5" Height="12" Fill="Black" Margin="8,1,8,1"></Rectangle>
+                <Rectangle Width="1.5" Height="12" Fill="Black" Margin="8,1,8,1"/>
                 <Rectangle Margin="0,1,1,1" Height="12" Width="12" Fill="Blue"/>
                 <TextBlock Margin="3,1,1,1" Text="Male" VerticalAlignment="Center"/>
             </StackPanel>

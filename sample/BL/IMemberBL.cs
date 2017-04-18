@@ -1,11 +1,17 @@
 ﻿using System.Collections.Generic;
 using DataModel;
+using System;
 
 namespace BL
 {
     public interface IMemberBL
     {
         IList<Member> getAllMemberTree();
-        bool SaveMember(Member member);
+        void SaveMember(Member member, Action<bool,long> result);
+        Member GetMemberWithParentAndChild(long memberId);
+
+        void GetMember(long memberId,Action<Member> action);
+
+        void DeleteMember(long memberId, Action<bool> result);
     }
 }

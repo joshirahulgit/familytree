@@ -5,34 +5,24 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Data;
-using System.Windows.Media;
 
 namespace ClientApp.Converters
 {
-    public class GenderToBrushConverter : IValueConverter
+    class GenderToImageSourceConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is Gender)
             {
-                object brush = null;
                 Gender gender = (Gender)value;
                 switch (gender)
                 {
                     case Gender.Female:
-                        brush = (RadialGradientBrush)Application.Current.Resources["FemaleBG"];
-                        break;
+                        return "/ClientApp;Component/Contents/Images/Female-icon.png";
                     case Gender.Male:
-                        brush = (RadialGradientBrush)Application.Current.Resources["MaleBG"];
-                        break;
+                        return "/ClientApp;Component/Contents/Images/Male-icon.png";
                 }
-                if (parameter != null && parameter.ToString().ToLower().Equals("border") && brush != null)
-                {
-                    brush = new SolidColorBrush(Colors.WhiteSmoke);// Multiply(brush.Color, 10);
-                }
-                return brush;
             }
             throw new TypeAccessException("Expexted type is: Gender");
         }

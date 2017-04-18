@@ -25,9 +25,12 @@ namespace DataModel
         private Gender sex;
         private IList<Member> parents;
         private IList<Member> children;
-        private Nullable<long> motherId;
-        private Nullable<long> fatherId;
+        private long motherId;
+        private long fatherId;
         public bool HasChild { get; private set; }
+
+        public bool HasChildInDB { get; set; }
+        public bool HasParentInDB { get; set; }
 
         public string FirstName
         {
@@ -68,6 +71,22 @@ namespace DataModel
             {
                 dateOfBirth = value;
                 RaisePropertyChanged("DateOfBirth");
+                RaisePropertyChanged("Age");
+            }
+        }
+
+        public int Age
+        {
+            get
+            {
+                // Save today's date.
+                var today = DateTime.UtcNow;
+                // Calculate the age.
+                var age = today.Year - DateOfBirth.Year;
+                // Do stuff with it.
+                if (DateOfBirth > today.AddYears(-age))
+                    age--;
+                return age;
             }
         }
 
@@ -113,7 +132,7 @@ namespace DataModel
             }
         }
 
-        public long? MotherId
+        public long MotherId
         {
             get
             {
@@ -127,7 +146,7 @@ namespace DataModel
             }
         }
 
-        public long? FatherId
+        public long FatherId
         {
             get
             {
@@ -145,16 +164,16 @@ namespace DataModel
 
         public void setParents(IDictionary<long, Member> members)
         {
-            if (MotherId.HasValue && members[MotherId.Value] != null)
+            if (MotherId!=0 && members.ContainsKey(MotherId))
             {
-                Member mother = members[MotherId.Value];
+                Member mother = members[MotherId];
                 mother.HasChild = true;
                 Parents.Add(mother);
                 mother.AddChild(this);
             }
-            if (FatherId.HasValue && members[FatherId.Value] != null)
+            if (FatherId!=0 && members.ContainsKey(FatherId))
             {
-                Member father = members[FatherId.Value];
+                Member father = members[FatherId];
                 father.HasChild = true;
                 Parents.Add(father);
                 father.AddChild(this);

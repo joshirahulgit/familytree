@@ -1,4 +1,5 @@
 ﻿using BL;
+using ClientApp.Helper;
 using DataModel;
 using System;
 using System.Collections.Generic;
@@ -10,15 +11,13 @@ using System.Windows.Input;
 
 namespace ClientApp
 {
-    class MainWindowVM : INotifyPropertyChanged
+    class MainWindowVM : ViewModelBase
     {
         private IMemberBL memberBL;
 
         private IList<Member> members;
 
         private bool isEditable;
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public Member SelectedMember { get; set; }
 
@@ -58,14 +57,6 @@ namespace ClientApp
             {
                 toEditMember = value;
                 RaisePropertyChanged("ToEditMember");
-            }
-        }
-
-        public ICommand SaveMemberCmd
-        {
-            get
-            {
-                return new SaveMemberCommand(this);
             }
         }
 
@@ -120,40 +111,6 @@ namespace ClientApp
         private void ReadAndSetTree()
         {
             this.Members = memberBL.getAllMemberTree();
-        }
-
-        public void RaisePropertyChanged(string propName)
-        {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
-        }
-        public void SaveToEditMember()
-        {
-            if (memberBL.SaveMember(ToEditMember))
-            {
-                ReadAndSetTree();
-                CancelEditCmd.Execute(this);
-            }
-        }
-    }
-    class SaveMemberCommand : ICommand
-    {
-        private MainWindowVM mainVM;
-
-        public event EventHandler CanExecuteChanged;
-
-        public SaveMemberCommand(MainWindowVM mainVM)
-        {
-            this.mainVM = mainVM;
-        }
-
-        public bool CanExecute(object parameter)
-        {
-            return true;
-        }
-
-        public void Execute(object parameter)
-        {
-            this.mainVM.SaveToEditMember();
         }
     }
 
