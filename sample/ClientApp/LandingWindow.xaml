@@ -24,7 +24,7 @@
                 FontSize="40" VerticalAlignment="Top" HorizontalAlignment="Center" 
                 FontFamily="Microsoft YaHei UI Light" 
                 TextAlignment="Center">
-            This is a Bonita Springs Public Library Member Portal.<LineBreak/>You can search Library Member here.<LineBreak/>Also you can add a Library Member here.
+            This is a Bonita Springs Public Library Member Portal.<LineBreak/>You can search Library Member here.<LineBreak/>Also you can add or edit a Library Member.
             </TextBlock>
             <Border HorizontalAlignment="Center" Margin="0,50,0,0" BorderBrush="White" BorderThickness="1">
                 <StackPanel Orientation="Horizontal" >

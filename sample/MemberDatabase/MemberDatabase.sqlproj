@@ -130,4 +130,7 @@
     </Build>
     <Build Include="dbo\Data\Member.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="dbo\SQLBackup.sql" />
+  </ItemGroup>
 </Project>

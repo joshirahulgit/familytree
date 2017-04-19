@@ -164,8 +164,8 @@ namespace ClientApp.UserControls
 
                     //Animating line drawing.
                     Storyboard sb = new Storyboard();
-                    DoubleAnimation da = new DoubleAnimation(line.Y2, p.Y, new Duration(new TimeSpan(0, 0, 3)));
-                    DoubleAnimation da1 = new DoubleAnimation(line.X2, p.X, new Duration(new TimeSpan(0, 0, 3)));
+                    DoubleAnimation da = new DoubleAnimation(line.Y2, p.Y, new Duration(new TimeSpan(0, 0, 1)));
+                    DoubleAnimation da1 = new DoubleAnimation(line.X2, p.X, new Duration(new TimeSpan(0, 0, 1)));
                     Storyboard.SetTargetProperty(da, new PropertyPath("(Line.Y2)"));
                     Storyboard.SetTargetProperty(da1, new PropertyPath("(Line.X2)"));
                     sb.Children.Add(da);
@@ -196,8 +196,8 @@ namespace ClientApp.UserControls
 
                     //Animating line drawing.
                     Storyboard sb = new Storyboard();
-                    DoubleAnimation da = new DoubleAnimation(line.Y2, p.Y, new Duration(new TimeSpan(0, 0, 3)));
-                    DoubleAnimation da1 = new DoubleAnimation(line.X2, p.X, new Duration(new TimeSpan(0, 0, 3)));
+                    DoubleAnimation da = new DoubleAnimation(line.Y2, p.Y, new Duration(new TimeSpan(0, 0, 1)));
+                    DoubleAnimation da1 = new DoubleAnimation(line.X2, p.X, new Duration(new TimeSpan(0, 0, 1)));
                     Storyboard.SetTargetProperty(da, new PropertyPath("(Line.Y2)"));
                     Storyboard.SetTargetProperty(da1, new PropertyPath("(Line.X2)"));
                     sb.Children.Add(da);

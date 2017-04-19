@@ -21,10 +21,18 @@ namespace ClientApp
     /// </summary>
     public partial class SaveMemberWindow : Window
     {
+
+
         public SaveMemberWindow()
         {
             InitializeComponent();
             (SaveMemberView.DataContext as SaveMemberViewModel).SelectedMember = new Member(0);
+            (SaveMemberView.DataContext as SaveMemberViewModel).SetCloseWindowAction(CloseWindowAction_Handler);
+        }
+
+        private void CloseWindowAction_Handler()
+        {
+            this.Close();
         }
 
         public SaveMemberWindow(Member selectedMember):this()

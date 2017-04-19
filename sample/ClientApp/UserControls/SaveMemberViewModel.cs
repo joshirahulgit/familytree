@@ -25,6 +25,12 @@ namespace ClientApp.UserControls
 
         private bool? isFatherIdGood;
 
+        private Action closeWindowAction;
+
+        public void SetCloseWindowAction(Action action) {
+            this.closeWindowAction = action;
+        }
+
         private Member selectedMember;
 
         public Member SelectedMember
@@ -181,7 +187,11 @@ namespace ClientApp.UserControls
                     SelectedMember.PropertyChanged -= SelectedMember_PropertyChanged;
                     SelectedMember = new Member(0);
                     SelectedMember.PropertyChanged -= SelectedMember_PropertyChanged;
-                    MessageBox.Show("New member created with Id: " + memberId);
+                    if (closeWindowAction != null)
+                    {
+                        closeWindowAction();
+                    }
+                    MessageBox.Show("Member saved with Id: " + memberId);
                 }
                 else
                 {
